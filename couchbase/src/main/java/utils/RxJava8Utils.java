@@ -1,4 +1,4 @@
-package com.lightbend.utils;
+package utils;
 
 import rx.Observable;
 

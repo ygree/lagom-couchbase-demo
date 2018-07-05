@@ -26,7 +26,6 @@ public class ReadSideSubscriber {
             HelloEvent.GreetingMessageChanged messageChanged = (HelloEvent.GreetingMessageChanged) event;
             // Update the message
             return repository.updateMessage(messageChanged.getName(), messageChanged.getMessage());
-
           } else {
             // Ignore all other events
             return CompletableFuture.completedFuture(Done.getInstance());

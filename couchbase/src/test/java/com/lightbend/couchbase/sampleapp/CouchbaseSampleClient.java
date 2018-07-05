@@ -1,4 +1,4 @@
-package com.lightbend.readside.couchbase.app;
+package com.lightbend.couchbase.sampleapp;
 
 import com.couchbase.client.java.*;
 import com.couchbase.client.java.document.*;

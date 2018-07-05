@@ -1,4 +1,4 @@
-package com.lightbend.readside.couchbase;
+package com.lightbend.couchbase;
 
 import akka.actor.*;
 

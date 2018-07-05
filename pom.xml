@@ -17,6 +17,7 @@
         <module>readside-api</module>
         <module>readside-impl</module>
         <module>integration-tests</module>
+        <module>couchbase</module>
     </modules>
 
     <build>
