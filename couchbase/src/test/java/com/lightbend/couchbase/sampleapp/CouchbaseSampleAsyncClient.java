@@ -31,9 +31,10 @@ public class CouchbaseSampleAsyncClient {
                 .put("email", "kingarthur@couchbase.com")
                 .put("interests", JsonArray.from("Holy Grail", "African Swallows"));
 
-        Observable<JsonDocument> jsonDocumentObservable = bucket.flatMap(b -> b.upsert(JsonDocument.create("u:king_arthur", arthur)));
-
+        JsonDocument doc = JsonDocument.create("u:king_arthur", arthur);
+        Observable<JsonDocument> jsonDocumentObservable = bucket.flatMap(b -> b.upsert(doc));
         Blocking.blockForSingle(jsonDocumentObservable, 30, TimeUnit.SECONDS);
+
 
         Await.ready(actorSystem.terminate(), Duration.Inf());
 

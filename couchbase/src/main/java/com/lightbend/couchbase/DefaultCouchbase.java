@@ -38,7 +38,7 @@ public class DefaultCouchbase implements Couchbase {
     }
 
     void shutdown() {
-        //TODO handle errors properly
+        //TODO handle errors properly and add logging
         Blocking.blockForSingle(bucket.flatMap(AsyncBucket::close), 30, TimeUnit.SECONDS);
         Blocking.blockForSingle(cluster.disconnect(), 30, TimeUnit.SECONDS);
         Blocking.blockForSingle(environment.shutdownAsync().single(), 30, TimeUnit.SECONDS);
