@@ -3,6 +3,7 @@ package com.lightbend.readside.impl;
 import akka.NotUsed;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.hello.api.HelloService;
+import com.lightbend.lagom.javadsl.persistence.ReadSide;
 import com.lightbend.readside.api.ReadSideService;
 
 import javax.inject.Inject;
@@ -16,9 +17,12 @@ public class ReadSideServiceImpl implements ReadSideService {
     private final ReadSideRepository repository;
 
     @Inject
-    public ReadSideServiceImpl(HelloService helloService, ReadSideRepository repository) {
+    public ReadSideServiceImpl(HelloService helloService,
+                               ReadSideRepository repository,
+                               ReadSide readSide) {
         this.helloService = helloService;
         this.repository = repository;
+//TODO        readSide.register(HelloEventProcessor.class);
     }
 
     @Override
