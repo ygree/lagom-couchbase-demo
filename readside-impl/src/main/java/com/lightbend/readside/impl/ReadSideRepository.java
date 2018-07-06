@@ -1,38 +1,26 @@
 package com.lightbend.readside.impl;
 
 import akka.Done;
+import com.couchbase.client.java.AsyncBucket;
+import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
+import com.lightbend.couchbase.Couchbase;
+import rx.Observable;
+import utils.RxJava8Utils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-
-import akka.actor.ActorSystem;
-import com.couchbase.client.java.AsyncBucket;
-import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonArray;
-import com.couchbase.client.java.document.json.JsonObject;
-import com.couchbase.client.java.query.N1qlQuery;
-import com.lightbend.couchbase.Couchbase;
-import com.lightbend.couchbase.CouchbaseExtension;
-import rx.Observable;
-import utils.RxJava8Utils;
 
 @Singleton
 public class ReadSideRepository {
 
-//    private final Map<String, String> greetings;
-
     private final Couchbase couchbase;
 
     @Inject
-    public ReadSideRepository(ActorSystem system) {
-//        greetings = new HashMap<>();
-
-        couchbase = CouchbaseExtension.CouchbaseExtensionProvider.get(system);
+    public ReadSideRepository(Couchbase couchbase) {
+        this.couchbase = couchbase;
     }
 
     public CompletionStage<Done> updateMessage(String name, String message) {
@@ -48,7 +36,6 @@ public class ReadSideRepository {
         Observable<JsonDocument> result = bucket.flatMap(b -> b.upsert(doc));
 
         return RxJava8Utils.fromSingleObservable(result.map(v -> Done.getInstance()));
-//        greetings.put(name, message);
     }
 
     private String userMessageDocId(String name) {
@@ -65,7 +52,6 @@ public class ReadSideRepository {
                 .map(v -> Optional.ofNullable(v.content().getString("message")));
 
         return RxJava8Utils.fromSingleOptOptObservable(result);
-//        return CompletableFuture.completedFuture(Optional.ofNullable(greetings.get(name)));
     }
 }
 
