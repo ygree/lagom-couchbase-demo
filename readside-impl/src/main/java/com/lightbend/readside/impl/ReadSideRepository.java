@@ -3,7 +3,10 @@ package com.lightbend.readside.impl;
 import akka.Done;
 import com.couchbase.client.java.AsyncBucket;
 import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.query.N1qlQuery;
+import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.lightbend.couchbase.Couchbase;
 import rx.Observable;
 import utils.RxJava8Utils;
@@ -28,14 +31,21 @@ public class ReadSideRepository {
         Observable<AsyncBucket> bucket = couchbase.getBucket();
 
         JsonObject obj = JsonObject.create()
-                .put("message", message);
+                .put("messages", JsonArray.empty());
 
-        JsonDocument doc = JsonDocument.create(userMessageDocId(name), obj);
+        String docId = userMessageDocId(name);
+        JsonDocument doc = JsonDocument.create(docId, obj);
 
-        //TODO: implement append message logic if it hasn't changed
-        Observable<JsonDocument> result = bucket.flatMap(b -> b.upsert(doc));
+        String queryText = "UPDATE test USE KEYS $1 SET messages = ARRAY_PREPEND($2, IFNULL(messages, []));";
+        ParameterizedN1qlQuery query = N1qlQuery.parameterized(queryText, JsonArray.from(docId, message));
 
-        return RxJava8Utils.fromSingleObservable(result.map(v -> Done.getInstance()));
+        Observable<Done> result = bucket
+                .flatMap(b -> b.insert(doc).map(x -> b))
+                .onExceptionResumeNext(bucket)
+                .flatMap(b -> b.query(query))
+                .map(v -> Done.getInstance());
+
+        return RxJava8Utils.fromSingleObservable(result);
     }
 
     private String userMessageDocId(String name) {
