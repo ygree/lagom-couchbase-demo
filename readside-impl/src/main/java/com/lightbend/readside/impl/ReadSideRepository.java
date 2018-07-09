@@ -7,6 +7,9 @@ import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
+import com.couchbase.client.java.query.dsl.Expression;
+import com.couchbase.client.java.query.dsl.functions.ConditionalFunctions;
+import com.couchbase.client.java.query.dsl.path.UpdateSetPath;
 import com.lightbend.couchbase.Couchbase;
 import rx.Observable;
 import utils.RxJava8Utils;
@@ -15,6 +18,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+
+import static com.couchbase.client.java.query.Update.update;
+import static com.couchbase.client.java.query.dsl.Expression.*;
+import static com.couchbase.client.java.query.dsl.functions.ArrayFunctions.arrayIfNull;
+import static com.couchbase.client.java.query.dsl.functions.ArrayFunctions.arrayPrepend;
+import static com.couchbase.client.java.query.dsl.functions.ConditionalFunctions.*;
 
 @Singleton
 public class ReadSideRepository {
@@ -39,10 +48,19 @@ public class ReadSideRepository {
         String queryText = "UPDATE test USE KEYS $1 SET messages = ARRAY_PREPEND($2, IFNULL(messages, [])), message = $2;";
         ParameterizedN1qlQuery query = N1qlQuery.parameterized(queryText, JsonArray.from(docId, message));
 
+/* TODO: it doesn't translates into a correct query
+        UpdateSetPath updateSetPath =
+                update("test")
+                        .useKeys(docId)
+                        .set("message", message)
+                        .set("messages", arrayPrepend(x(message), ifNull(x("messages"), x(JsonArray.empty()))));
+*/
+
         Observable<Done> result = bucket
                 .flatMap(b -> b.insert(doc).map(x -> b))
                 .onExceptionResumeNext(bucket)
                 .flatMap(b -> b.query(query))
+//                .flatMap(b -> b.query(updateSetPath))
                 .map(v -> Done.getInstance());
 
         return RxJava8Utils.fromSingleObservable(result);
