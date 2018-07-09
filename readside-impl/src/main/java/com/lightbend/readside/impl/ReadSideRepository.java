@@ -49,6 +49,7 @@ public class ReadSideRepository {
         ParameterizedN1qlQuery query = N1qlQuery.parameterized(queryText, JsonArray.from(docId, message));
 
 /* TODO: it doesn't translates into a correct query
+//TODO: see com.lightbend.readside.impl.N1qlDslTests
         UpdateSetPath updateSetPath =
                 update("test")
                         .useKeys(docId)
