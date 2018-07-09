@@ -3,6 +3,7 @@ package com.lightbend.hello.impl;
 import akka.Done;
 import akka.NotUsed;
 import akka.japi.Pair;
+import com.lightbend.hello.impl.readside.ChangeEventProcessor;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.api.broker.Topic;
 import com.lightbend.lagom.javadsl.broker.TopicProducer;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 import com.lightbend.hello.api.GreetingMessage;
 import com.lightbend.hello.api.HelloService;
 import com.lightbend.hello.impl.HelloCommand.*;
+import com.lightbend.lagom.javadsl.persistence.ReadSide;
 
 /**
  * Implementation of the HelloService.
@@ -24,9 +26,12 @@ public class HelloServiceImpl implements HelloService {
   private final PersistentEntityRegistry persistentEntityRegistry;
 
   @Inject
-  public HelloServiceImpl(PersistentEntityRegistry persistentEntityRegistry) {
+  public HelloServiceImpl(PersistentEntityRegistry persistentEntityRegistry,
+                          ReadSide readSide)
+  {
     this.persistentEntityRegistry = persistentEntityRegistry;
     persistentEntityRegistry.register(HelloEntity.class);
+    readSide.register(ChangeEventProcessor.class);
   }
 
   @Override
