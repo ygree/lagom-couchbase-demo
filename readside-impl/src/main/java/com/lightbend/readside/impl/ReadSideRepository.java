@@ -36,7 +36,7 @@ public class ReadSideRepository {
         String docId = userMessageDocId(name);
         JsonDocument doc = JsonDocument.create(docId, obj);
 
-        String queryText = "UPDATE test USE KEYS $1 SET messages = ARRAY_PREPEND($2, IFNULL(messages, []));";
+        String queryText = "UPDATE test USE KEYS $1 SET messages = ARRAY_PREPEND($2, IFNULL(messages, [])), message = $2;";
         ParameterizedN1qlQuery query = N1qlQuery.parameterized(queryText, JsonArray.from(docId, message));
 
         Observable<Done> result = bucket

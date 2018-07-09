@@ -2,27 +2,17 @@ package com.lightbend.readside.impl;
 
 import akka.NotUsed;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
-import com.lightbend.hello.api.HelloService;
-import com.lightbend.lagom.javadsl.persistence.ReadSide;
 import com.lightbend.readside.api.ReadSideService;
 
 import javax.inject.Inject;
 
-/**
- * Implementation of the HelloString.
- */
 public class ReadSideServiceImpl implements ReadSideService {
 
-    private final HelloService helloService;
     private final ReadSideRepository repository;
 
     @Inject
-    public ReadSideServiceImpl(HelloService helloService,
-                               ReadSideRepository repository,
-                               ReadSide readSide) {
-        this.helloService = helloService;
+    public ReadSideServiceImpl(ReadSideRepository repository) {
         this.repository = repository;
-//TODO        readSide.register(HelloEventProcessor.class);
     }
 
     @Override
