@@ -37,6 +37,25 @@ This service consumes events from a Kafka topic produced by the Hello module and
 curl http://localhost:9000/api/readside/hello/Alice
 ```
 
+CRUD example
+------------
+
+For demonstration purposes readside module also implements a direct CRUD-like access to Couchbase.
+
+> THIS approach is NOT recommended for implementing flexible and scalable Microservices.
+
+> ES/CQRS approach provides means to build flexible and scalable microservices promoting asynchronous
+> communications between services.
+
+```
+
+curl -H "Content-Type: application/json" -X POST -d '{"message": "Hi"}' http://localhost:9000/api/readside/hello/Alice
+{ "done" : true }✔
+
+curl http://localhost:9000/api/readside/hello/Alice
+Hi, Alice!✔
+```
+
 Couchbase
 ---------
 
