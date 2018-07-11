@@ -65,6 +65,14 @@
                     <lagomService>true</lagomService>
                 </configuration>
             </plugin>
+<!--
+            TODO: Enable plugin when it fixed. Currently it fails with
+            TODO: ClassNotFoundException: com.lightbend.lagom.internal.api.tools.ServiceDetector$
+            <plugin>
+                <groupId>com.lightbend.rp</groupId>
+                <artifactId>reactive-app-maven-plugin</artifactId>
+            </plugin>
+-->
         </plugins>
     </build>
 </project>

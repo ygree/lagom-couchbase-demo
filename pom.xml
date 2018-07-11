@@ -62,6 +62,26 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.lightbend.rp</groupId>
+                    <artifactId>reactive-app-maven-plugin</artifactId>
+                    <version>0.3.0</version>
+                    <!--<configuration>-->
+                    <!--<mainClass>com.lightbend.rp.test.akkacluster.SimpleClusterApp</mainClass>-->
+                    <!--</configuration>-->
+                    <executions>
+                        <execution>
+                            <id>build-docker</id>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <dependencyManagement>

@@ -24,7 +24,7 @@ public class DefaultCouchbase implements Couchbase {
         this.environment = DefaultCouchbaseEnvironment.create();
         this.couchbaseConfig = new CouchbaseConfig(system);
         this.cluster = couchbaseConfig.createCluster(environment);
-        this.bucket = couchbaseConfig.openBucket(cluster);
+        this.bucket = couchbaseConfig.openBucket(cluster).cache();
     }
 
     @Override

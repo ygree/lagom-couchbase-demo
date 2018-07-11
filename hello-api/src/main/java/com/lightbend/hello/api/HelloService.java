@@ -27,8 +27,8 @@ public interface HelloService extends Service {
 
 
   /**
-   * Example: curl -H "Content-Type: application/json" -X POST -d '{"message":
-   * "Hi"}' http://localhost:9000/api/hello/Alice
+   * Example:
+   * curl -H "Content-Type: application/json" -X POST -d '{"message":"Hi"}' http://localhost:9000/api/hello/Alice
    */
   ServiceCall<GreetingMessage, Done> useGreeting(String id);
 
@@ -42,7 +42,7 @@ public interface HelloService extends Service {
   default Descriptor descriptor() {
     // @formatter:off
     return named("hello").withCalls(
-        pathCall("/api/hello/:id",  this::hello),
+        pathCall("/api/hello/:id", this::hello),
         pathCall("/api/hello/:id", this::useGreeting)
       ).withTopics(
           topic("hello-events", this::helloEvents)
