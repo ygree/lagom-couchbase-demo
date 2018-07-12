@@ -65,7 +65,7 @@ public class ReadSideRepository {
     }
 
     private String offsetDocId(AggregateEventTag<HelloEvent> tag) {
-        return "user_messages_with_offset:tag_offset:" + tag.tag();
+        return "hello_user_messages_with_offset:tag_offset:" + tag.tag();
     }
 
     public CompletionStage<Done> updateMessage(String name, String message) {
@@ -90,7 +90,7 @@ public class ReadSideRepository {
     }
 
     private String userMessageDocId(String name) {
-        return "user_messages_with_offset:" + name;
+        return "hello_user_messages_with_offset:" + name;
     }
 
 }

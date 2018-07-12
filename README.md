@@ -49,11 +49,12 @@ For demonstration purposes readside module also implements a direct CRUD-like ac
 
 ```
 
-curl -H "Content-Type: application/json" -X POST -d '{"message": "Hi"}' http://localhost:9000/api/readside/hello/Alice
+curl -H "Content-Type: application/json" -X POST -d '{"message": "Hi"}' http://localhost:9000/crud-api/hello/Alice
 { "done" : true }✔
 
-curl http://localhost:9000/api/readside/hello/Alice
-Hi, Alice!✔
+curl http://localhost:9000/crud-api/hello/Alice
+Hello, Alice!✔
+
 ```
 
 Couchbase

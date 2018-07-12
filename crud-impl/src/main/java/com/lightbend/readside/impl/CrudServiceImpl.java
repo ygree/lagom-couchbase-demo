@@ -8,12 +8,12 @@ import com.lightbend.readside.api.ReadSideService;
 
 import javax.inject.Inject;
 
-public class ReadSideServiceImpl implements ReadSideService {
+public class CrudServiceImpl implements ReadSideService {
 
-    private final ReadSideRepository repository;
+    private final CrudRepository repository;
 
     @Inject
-    public ReadSideServiceImpl(ReadSideRepository repository) {
+    public CrudServiceImpl(CrudRepository repository) {
         this.repository = repository;
     }
 
@@ -23,5 +23,10 @@ public class ReadSideServiceImpl implements ReadSideService {
             repository.getMessage(name).thenApply(message ->
                 String.format("%s, %s!", message.orElse("Hello (default)"), name)
             );
+    }
+
+    @Override
+    public ServiceCall<GreetingMessage, Done> useGreeting(String id) {
+        return request -> repository.updateMessage(id, request.getMessage());
     }
 }

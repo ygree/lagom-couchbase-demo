@@ -56,7 +56,8 @@ public class ChangeEventProcessor extends ReadSideProcessor<HelloEvent> {
     private CompletionStage<Done> updateByEvent(HelloEvent event, Offset offset, AggregateEventTag<HelloEvent> tag) {
         if (event instanceof HelloEvent.GreetingMessageChanged) {
             HelloEvent.GreetingMessageChanged evt = (HelloEvent.GreetingMessageChanged) event;
-            return repository.updateMessage(evt.name, evt.message)
+            return repository
+                    .updateMessage(evt.name, evt.message)
                     .thenCompose(v -> repository.updateOffset(tag, offset));
         }
         return CompletableFuture.completedFuture(Done.getInstance());

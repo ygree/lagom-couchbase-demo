@@ -11,6 +11,8 @@
 
     <modules>
         <module>couchbase</module>
+        <module>crud-api</module>
+        <module>crud-impl</module>
         <module>hello-api</module>
         <module>hello-impl</module>
         <module>readside-api</module>

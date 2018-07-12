@@ -16,11 +16,14 @@ public interface ReadSideService extends Service {
    */
   ServiceCall<NotUsed, String> hello(String id);
 
+  ServiceCall<GreetingMessage, Done> useGreeting(String id);
+
     @Override
   default Descriptor descriptor() {
-    return named("readside")
+    return named("crud")
             .withCalls(
-                pathCall("/readside-api/hello/:id",  this::hello)
+                pathCall("/crud-api/hello/:id",  this::hello),
+                pathCall("/crud-api/hello/:id", this::useGreeting)
             ).withAutoAcl(true);
   }
 }
