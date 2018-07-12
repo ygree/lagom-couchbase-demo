@@ -9,5 +9,5 @@ import rx.Observable;
 public interface Couchbase extends Extension {
     CouchbaseEnvironment getEnvironment();
 
-    Observable<AsyncBucket> getBucket();
+    AsyncBucket getBucket();
 }

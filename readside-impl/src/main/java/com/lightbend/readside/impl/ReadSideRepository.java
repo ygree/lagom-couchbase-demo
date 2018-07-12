@@ -12,11 +12,13 @@ import com.couchbase.client.java.query.dsl.functions.ConditionalFunctions;
 import com.couchbase.client.java.query.dsl.path.UpdateSetPath;
 import com.lightbend.couchbase.Couchbase;
 import rx.Observable;
+import rx.Single;
 import utils.RxJava8Utils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 import static com.couchbase.client.java.query.Update.update;
@@ -37,10 +39,11 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        Observable<AsyncBucket> bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getBucket();
 
         JsonObject obj = JsonObject.create()
-                .put("messages", JsonArray.empty());
+                .put("messages", JsonArray.from(message))
+                .put("message", message);
 
         String docId = userMessageDocId(name);
         JsonDocument doc = JsonDocument.create(docId, obj);
@@ -48,21 +51,9 @@ public class ReadSideRepository {
         String queryText = "UPDATE test USE KEYS $1 SET messages = ARRAY_PREPEND($2, IFNULL(messages, [])), message = $2;";
         ParameterizedN1qlQuery query = N1qlQuery.parameterized(queryText, JsonArray.from(docId, message));
 
-/* TODO: it doesn't translates into a correct query
-//TODO: see com.lightbend.readside.impl.N1qlDslTests
-        UpdateSetPath updateSetPath =
-                update("test")
-                        .useKeys(docId)
-                        .set("message", message)
-                        .set("messages", arrayPrepend(x(message), ifNull(x("messages"), x(JsonArray.empty()))));
-*/
-
         Observable<Done> result = bucket
-                .flatMap(b -> b.insert(doc).map(x -> b))
-                .onExceptionResumeNext(bucket)
-                .flatMap(b -> b.query(query))
-//                .flatMap(b -> b.query(updateSetPath))
-                .map(v -> Done.getInstance());
+                .insert(doc).map(x -> Done.getInstance())
+                .onErrorResumeNext(e -> bucket.query(query).map(x -> Done.getInstance()));
 
         return RxJava8Utils.fromSingleObservable(result);
     }
@@ -75,9 +66,10 @@ public class ReadSideRepository {
 
         String docId = userMessageDocId(name);
 
-        Observable<AsyncBucket> bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getBucket();
 
-        Observable<Optional<String>> result = bucket.flatMap(b -> b.get(docId))
+        Observable<Optional<String>> result = bucket
+                .get(docId)
                 .map(v -> Optional.ofNullable(v.content().getString("message")));
 
         return RxJava8Utils.fromSingleOptOptObservable(result);

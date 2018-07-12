@@ -23,7 +23,7 @@ public class CouchbaseSampleAsyncClient {
         // use Couchbase Akka Extension to manage Couchbase resources
         Couchbase couchbase = CouchbaseExtension.CouchbaseExtensionProvider.get(actorSystem);
 
-        Observable<AsyncBucket> bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getBucket();
 
         // Create a JSON Document
         JsonObject arthur = JsonObject.create()
@@ -32,7 +32,7 @@ public class CouchbaseSampleAsyncClient {
                 .put("interests", JsonArray.from("Holy Grail", "African Swallows"));
 
         JsonDocument doc = JsonDocument.create("u:king_arthur", arthur);
-        Observable<JsonDocument> jsonDocumentObservable = bucket.flatMap(b -> b.upsert(doc));
+        Observable<JsonDocument> jsonDocumentObservable = bucket.upsert(doc);
         Blocking.blockForSingle(jsonDocumentObservable, 30, TimeUnit.SECONDS);
 
 

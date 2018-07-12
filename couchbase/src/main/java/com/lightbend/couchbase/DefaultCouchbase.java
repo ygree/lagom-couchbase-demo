@@ -16,7 +16,7 @@ public class DefaultCouchbase implements Couchbase {
     private final DefaultCouchbaseEnvironment environment;
     private final CouchbaseConfig couchbaseConfig;
     private final CouchbaseAsyncCluster cluster;
-    private final Observable<AsyncBucket> bucket;
+    private final AsyncBucket bucket;
     private final LoggingAdapter log;
 
     public DefaultCouchbase(ExtendedActorSystem system) {
@@ -24,7 +24,7 @@ public class DefaultCouchbase implements Couchbase {
         this.environment = DefaultCouchbaseEnvironment.create();
         this.couchbaseConfig = new CouchbaseConfig(system);
         this.cluster = couchbaseConfig.createCluster(environment);
-        this.bucket = couchbaseConfig.openBucket(cluster).cache();
+        this.bucket = couchbaseConfig.openBucket(cluster).toSingle().toBlocking().value();
     }
 
     @Override
@@ -33,13 +33,13 @@ public class DefaultCouchbase implements Couchbase {
     }
 
     @Override
-    public Observable<AsyncBucket> getBucket() {
+    public AsyncBucket getBucket() {
         return bucket;
     }
 
     void shutdown() {
         //TODO handle errors properly and add logging
-        Blocking.blockForSingle(bucket.flatMap(AsyncBucket::close), 30, TimeUnit.SECONDS);
+        Blocking.blockForSingle(bucket.close(), 30, TimeUnit.SECONDS);
         Blocking.blockForSingle(cluster.disconnect(), 30, TimeUnit.SECONDS);
         Blocking.blockForSingle(environment.shutdownAsync().single(), 30, TimeUnit.SECONDS);
     }

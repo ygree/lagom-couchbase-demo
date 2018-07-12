@@ -12,6 +12,7 @@ import com.lightbend.hello.impl.HelloEvent;
 import com.lightbend.lagom.javadsl.persistence.AggregateEventTag;
 import com.lightbend.lagom.javadsl.persistence.Offset;
 import rx.Observable;
+import rx.Single;
 import utils.RxJava8Utils;
 
 import javax.inject.Inject;
@@ -33,26 +34,23 @@ public class ReadSideRepository {
 
     public CompletionStage<Offset> getOffset(AggregateEventTag<HelloEvent> tag) {
 
-        Observable<AsyncBucket> bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getBucket();
         String docId = offsetDocId(tag);
 
-        Observable<Optional<Offset>> result = bucket.flatMap(b ->
-                b.get(docId).map(v ->
+        Observable<Optional<Offset>> result = bucket
+                .get(docId).map(v ->
                         Optional.ofNullable(v.content().getString("offset"))
                                 //TODO need support long based offset as well
                                 .map(UUID::fromString)
                                 .map(uid -> ((Offset) new Offset.TimeBasedUUID(uid)))
-                )
-        );
+                );
 
         return RxJava8Utils.fromSingleOptOptObservable(result).thenApply(v -> v.orElse(Offset.NONE));
     }
 
     public CompletionStage<Done> updateOffset(AggregateEventTag<HelloEvent> tag, Offset offset) {
 
-//        System.out.println(">>> updateOffset " + tag.tag() + " : " + offset);
-
-        Observable<AsyncBucket> bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("offset", offset.toString());
@@ -60,7 +58,7 @@ public class ReadSideRepository {
         JsonDocument doc = JsonDocument.create(offsetDocId(tag), obj);
 
         Observable<Done> result = bucket
-                .flatMap(b -> b.upsert(doc))
+                .upsert(doc)
                 .map(b -> Done.getInstance());
 
         return RxJava8Utils.fromSingleObservable(result);
@@ -72,10 +70,11 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        Observable<AsyncBucket> bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getBucket();
 
         JsonObject obj = JsonObject.create()
-                .put("messages", JsonArray.empty());
+                .put("messages", JsonArray.from(message))
+                .put("message", message);
 
         String docId = userMessageDocId(name);
         JsonDocument doc = JsonDocument.create(docId, obj);
@@ -83,12 +82,9 @@ public class ReadSideRepository {
         String queryText = "UPDATE test USE KEYS $1 SET messages = ARRAY_PREPEND($2, IFNULL(messages, [])), message = $2;";
         ParameterizedN1qlQuery query = N1qlQuery.parameterized(queryText, JsonArray.from(docId, message));
 
-
         Observable<Done> result = bucket
-                .flatMap(b -> b.insert(doc).map(x -> b))
-                .onExceptionResumeNext(bucket)
-                .flatMap(b -> b.query(query))
-                .map(v -> Done.getInstance());
+                .insert(doc).map(x -> Done.getInstance())
+                .onErrorResumeNext(e -> bucket.query(query).map(x -> Done.getInstance()));
 
         return RxJava8Utils.fromSingleObservable(result);
     }
