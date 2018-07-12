@@ -69,3 +69,22 @@ docker run -d --name db -p 8091-8094:8091-8094 -p 11210:11210 couchbase
 
 open [http://localhost:8091]
 
+Cassandra
+---------
+
+```
+22:13 $ ~/local/apps/apache-cassandra-3.11.2/bin/cqlsh 127.0.0.1 4000
+Connected to Test Cluster at 127.0.0.1:4000.
+[cqlsh 5.0.1 | Cassandra 3.11.2 | CQL spec 3.4.4 | Native protocol v4]
+Use HELP for help.
+cqlsh> show databases
+
+describe keyspaces;
+
+use <keyspace>;
+
+describe tables;
+
+SELECT * FROM system_schema.views;
+```
+

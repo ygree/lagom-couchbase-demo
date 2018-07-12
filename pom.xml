@@ -98,6 +98,17 @@
                 <artifactId>lombok</artifactId>
                 <version>1.16.10</version>
             </dependency>
+            <dependency>
+                <groupId>com.typesafe.akka</groupId>
+                <artifactId>akka-persistence-cassandra_2.12</artifactId>
+                <version>0.85</version>
+            </dependency>
+            <dependency>
+                <groupId>com.typesafe.akka</groupId>
+                <artifactId>akka-persistence-cassandra-launcher_2.12</artifactId>
+                <version>0.85</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

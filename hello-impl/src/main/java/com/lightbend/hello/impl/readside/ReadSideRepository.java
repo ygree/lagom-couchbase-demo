@@ -50,7 +50,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateOffset(AggregateEventTag<HelloEvent> tag, Offset offset) {
 
-        System.out.println(">>> updateOffset " + tag.tag() + " : " + offset);
+//        System.out.println(">>> updateOffset " + tag.tag() + " : " + offset);
 
         Observable<AsyncBucket> bucket = couchbase.getBucket();
 
