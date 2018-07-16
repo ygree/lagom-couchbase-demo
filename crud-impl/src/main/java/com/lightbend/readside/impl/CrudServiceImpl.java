@@ -13,7 +13,7 @@ public class CrudServiceImpl implements ReadSideService {
     private final CrudRepository repository;
 
     @Inject
-    public CrudServiceImpl(CrudRepository repository) {
+    public CrudServiceImpl(CrudBlockingRepository repository) {
         this.repository = repository;
     }
 
