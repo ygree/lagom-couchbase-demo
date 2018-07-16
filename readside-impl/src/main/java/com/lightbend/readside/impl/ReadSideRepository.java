@@ -59,7 +59,7 @@ public class ReadSideRepository {
     }
 
     private String userMessageDocId(String name) {
-        return "user_messages:" + name;
+        return "read-side:user_messages:" + name;
     }
 
     public CompletionStage<Optional<String>> getMessage(String name) {
