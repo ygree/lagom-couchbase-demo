@@ -28,11 +28,6 @@ public class DefaultCouchbase implements Couchbase {
     }
 
     @Override
-    public CouchbaseEnvironment getEnvironment() {
-        return environment;
-    }
-
-    @Override
     public AsyncBucket getBucket() {
         return bucket;
     }
