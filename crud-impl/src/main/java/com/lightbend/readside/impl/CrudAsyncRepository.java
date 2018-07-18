@@ -29,7 +29,7 @@ public class CrudAsyncRepository implements CrudRepository {
     @Override
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("messages", JsonArray.from(message))
@@ -57,7 +57,7 @@ public class CrudAsyncRepository implements CrudRepository {
 
         String docId = userMessageDocId(name);
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         Observable<Optional<String>> result = bucket
                 .get(docId)

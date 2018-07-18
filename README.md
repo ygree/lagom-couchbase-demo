@@ -27,7 +27,7 @@ readside module
 This service consumes events from a Kafka topic produced by the Hello module and persists in Couchbase
 
 ```
-curl http://localhost:9000/api/readside/hello/Alice
+curl http://localhost:9000/readside-api/hello/Alice
 ```
 
 CRUD example
@@ -42,7 +42,7 @@ For demonstration purposes readside module also implements a direct CRUD-like ac
 
 ```
 
-curl -H "Content-Type: application/json" -X POST -d '{"message": "Hi"}' http://localhost:9000/crud-api/hello/Alice
+curl -H "Content-Type: application/json" -X POST -d '{"message": "Hello"}' http://localhost:9000/crud-api/hello/Alice
 { "done" : true }✔
 
 curl http://localhost:9000/crud-api/hello/Alice

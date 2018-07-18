@@ -7,25 +7,14 @@ import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
-import com.couchbase.client.java.query.dsl.Expression;
-import com.couchbase.client.java.query.dsl.functions.ConditionalFunctions;
-import com.couchbase.client.java.query.dsl.path.UpdateSetPath;
 import com.lightbend.couchbase.Couchbase;
 import rx.Observable;
-import rx.Single;
 import utils.RxJava8Utils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-
-import static com.couchbase.client.java.query.Update.update;
-import static com.couchbase.client.java.query.dsl.Expression.*;
-import static com.couchbase.client.java.query.dsl.functions.ArrayFunctions.arrayIfNull;
-import static com.couchbase.client.java.query.dsl.functions.ArrayFunctions.arrayPrepend;
-import static com.couchbase.client.java.query.dsl.functions.ConditionalFunctions.*;
 
 @Singleton
 public class ReadSideRepository {
@@ -39,7 +28,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("messages", JsonArray.from(message))
@@ -66,7 +55,7 @@ public class ReadSideRepository {
 
         String docId = userMessageDocId(name);
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         Observable<Optional<String>> result = bucket
                 .get(docId)

@@ -12,7 +12,6 @@ import rx.Observable;
 import scala.concurrent.Await;
 import scala.concurrent.duration.Duration;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class CouchbaseSampleAsyncClient {
@@ -23,7 +22,7 @@ public class CouchbaseSampleAsyncClient {
         // use Couchbase Akka Extension to manage Couchbase resources
         Couchbase couchbase = CouchbaseExtension.CouchbaseExtensionProvider.get(actorSystem);
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         // Create a JSON Document
         JsonObject arthur = JsonObject.create()

@@ -1,4 +1,4 @@
-package com.lightbend.couchbase;
+package com.lightbend.couchbase.test;
 
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
@@ -6,15 +6,13 @@ import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import com.couchbase.mock.Bucket;
 import com.couchbase.mock.BucketConfiguration;
 import com.couchbase.mock.CouchbaseMock;
-import com.couchbase.mock.client.MockClient;
+import com.lightbend.couchbase.Couchbase;
 import junit.framework.TestCase;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 abstract public class CouchbaseMockTest extends TestCase {
     private final BucketConfiguration bucketConfiguration = new BucketConfiguration();
-    private MockClient mockClient;
     private CouchbaseMock couchbaseMock;
     private Cluster cluster;
     private com.couchbase.client.java.Bucket bucket;
@@ -27,14 +25,14 @@ abstract public class CouchbaseMockTest extends TestCase {
         carrierPort = couchbaseMock.getCarrierPort(bucket);
     }
 
-    private void createMock(@NotNull String name, @NotNull String password) throws Exception {
+    private void createMock(String name, String password) throws Exception {
         bucketConfiguration.numNodes = 1;
         bucketConfiguration.numReplicas = 1;
         bucketConfiguration.numVBuckets = 1024;
         bucketConfiguration.name = name;
         bucketConfiguration.type = Bucket.BucketType.COUCHBASE;
         bucketConfiguration.password = password;
-        ArrayList<BucketConfiguration> configList = new ArrayList<BucketConfiguration>();
+        ArrayList<BucketConfiguration> configList = new ArrayList<>();
         configList.add(bucketConfiguration);
         couchbaseMock = new CouchbaseMock(0, configList);
         couchbaseMock.start();
@@ -59,7 +57,7 @@ abstract public class CouchbaseMockTest extends TestCase {
         createMock("default", "");
         getPortInfo("default");
         createClient();
-        couchbase = () -> bucket.async();
+        couchbase = () -> bucket;
     }
 
     @Override
@@ -69,9 +67,6 @@ abstract public class CouchbaseMockTest extends TestCase {
         }
         if (couchbaseMock != null) {
             couchbaseMock.stop();
-        }
-        if (mockClient != null) {
-            mockClient.shutdown();
         }
         super.tearDown();
     }

@@ -12,14 +12,12 @@ import com.lightbend.hello.impl.HelloEvent;
 import com.lightbend.lagom.javadsl.persistence.AggregateEventTag;
 import com.lightbend.lagom.javadsl.persistence.Offset;
 import rx.Observable;
-import rx.Single;
 import utils.RxJava8Utils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @Singleton
@@ -34,7 +32,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Offset> getOffset(AggregateEventTag<HelloEvent> tag) {
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
         String docId = offsetDocId(tag);
 
         Observable<Optional<Offset>> result = bucket
@@ -50,7 +48,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateOffset(AggregateEventTag<HelloEvent> tag, Offset offset) {
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("offset", offset.toString());
@@ -70,7 +68,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        AsyncBucket bucket = couchbase.getBucket();
+        AsyncBucket bucket = couchbase.getAsyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("messages", JsonArray.from(message))

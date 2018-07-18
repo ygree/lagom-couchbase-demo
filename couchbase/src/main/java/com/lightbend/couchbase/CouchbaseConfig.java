@@ -1,13 +1,12 @@
 package com.lightbend.couchbase;
 
 import akka.actor.ActorSystem;
-import com.couchbase.client.java.AsyncBucket;
-import com.couchbase.client.java.AsyncCluster;
-import com.couchbase.client.java.CouchbaseAsyncCluster;
+import com.couchbase.client.java.Bucket;
+import com.couchbase.client.java.Cluster;
+import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.auth.PasswordAuthenticator;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.typesafe.config.Config;
-import rx.Observable;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class CouchbaseConfig {
         this.bucketName = config.getString("bucket");
     }
 
-    protected Observable<AsyncBucket> openBucket(AsyncCluster cluster) {
+    protected Bucket openBucket(Cluster cluster) {
         if (username.isPresent()) {
             cluster.authenticate(new PasswordAuthenticator(username.get(), bucketPassword.orElse(null)));
             return cluster.openBucket(bucketName);
@@ -39,7 +38,7 @@ public class CouchbaseConfig {
         return cluster.openBucket(bucketName, bucketPassword.orElse(null));
     }
 
-    protected CouchbaseAsyncCluster createCluster(CouchbaseEnvironment environment) {
-        return CouchbaseAsyncCluster.create(environment, nodes);
+    protected CouchbaseCluster createCluster(CouchbaseEnvironment environment) {
+        return CouchbaseCluster.create(environment, nodes);
     }
 }
