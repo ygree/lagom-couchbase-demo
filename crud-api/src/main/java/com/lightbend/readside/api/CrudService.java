@@ -9,7 +9,7 @@ import com.lightbend.lagom.javadsl.api.Descriptor;
 import com.lightbend.lagom.javadsl.api.Service;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 
-public interface ReadSideService extends Service {
+public interface CrudService extends Service {
 
   /**
    * Example: curl http://localhost:9000/api/readside/hello/Alice

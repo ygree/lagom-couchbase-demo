@@ -63,7 +63,7 @@ public class CrudBlockingRepository implements CrudRepository {
 
         JsonDocument jsonDocument = bucket.get(docId);
 
-        Optional<String> result = Optional.ofNullable(jsonDocument.content().getString("message"));
+        Optional<String> result = Optional.ofNullable(jsonDocument).map(d -> d.content().getString("message"));
 
         return CompletableFuture.completedFuture(result);
     }

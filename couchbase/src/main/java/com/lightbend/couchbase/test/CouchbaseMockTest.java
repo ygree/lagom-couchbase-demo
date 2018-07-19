@@ -7,11 +7,12 @@ import com.couchbase.mock.Bucket;
 import com.couchbase.mock.BucketConfiguration;
 import com.couchbase.mock.CouchbaseMock;
 import com.lightbend.couchbase.Couchbase;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
 
 import java.util.ArrayList;
 
-abstract public class CouchbaseMockTest extends TestCase {
+abstract public class CouchbaseMockTest {
     private final BucketConfiguration bucketConfiguration = new BucketConfiguration();
     private CouchbaseMock couchbaseMock;
     private Cluster cluster;
@@ -51,24 +52,22 @@ abstract public class CouchbaseMockTest extends TestCase {
         return couchbase;
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         createMock("default", "");
         getPortInfo("default");
         createClient();
         couchbase = () -> bucket;
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         if (cluster != null) {
             cluster.disconnect();
         }
         if (couchbaseMock != null) {
             couchbaseMock.stop();
         }
-        super.tearDown();
     }
 
 }

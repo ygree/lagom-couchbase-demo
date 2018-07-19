@@ -4,11 +4,11 @@ import akka.Done;
 import akka.NotUsed;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.readside.api.GreetingMessage;
-import com.lightbend.readside.api.ReadSideService;
+import com.lightbend.readside.api.CrudService;
 
 import javax.inject.Inject;
 
-public class CrudServiceImpl implements ReadSideService {
+public class CrudServiceImpl implements CrudService {
 
     private final CrudRepository repository;
 

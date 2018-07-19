@@ -10,6 +10,8 @@ import rx.Observable;
 
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
+
 public class CouchbaseSampleTest extends CouchbaseMockTest {
 
     @Test
