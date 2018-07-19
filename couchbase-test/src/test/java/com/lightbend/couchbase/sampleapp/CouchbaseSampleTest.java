@@ -1,4 +1,4 @@
-package com.lightbend.couchbase.sampleapp;
+package test.java.com.lightbend.couchbase.sampleapp;
 
 import com.couchbase.client.core.utils.Blocking;
 import com.couchbase.client.java.document.JsonDocument;

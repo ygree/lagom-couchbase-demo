@@ -1,27 +1,21 @@
 package com.lightbend.readside.impl;
 
 import akka.japi.function.Procedure;
-import com.lightbend.couchbase.Couchbase;
-import com.lightbend.couchbase.test.CouchbaseMockTest;
+import com.lightbend.couchbase.test.CouchbaseMockLagomTest;
 import com.lightbend.lagom.javadsl.testkit.ServiceTest;
 import com.lightbend.readside.api.CrudService;
 import com.lightbend.readside.api.GreetingMessage;
 import org.junit.Test;
 
-import static com.lightbend.lagom.javadsl.testkit.ServiceTest.bind;
 import static com.lightbend.lagom.javadsl.testkit.ServiceTest.defaultSetup;
 import static com.lightbend.lagom.javadsl.testkit.ServiceTest.withServer;
-
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 
-public class CrudServiceTest extends CouchbaseMockTest {
+public class CrudServiceTest extends CouchbaseMockLagomTest {
 
     private void withMyServer(Procedure<ServiceTest.TestServer> block) {
-        withServer(defaultSetup()
-                .configureBuilder(b -> b.overrides(bind(Couchbase.class).toInstance(getCouchbase())))
-                .withCassandra(false),
-                block::apply);
+        withServer(defaultSetup().configureBuilder(withCouchbaseMock()).withCassandra(false), block);
     }
 
     @Test
