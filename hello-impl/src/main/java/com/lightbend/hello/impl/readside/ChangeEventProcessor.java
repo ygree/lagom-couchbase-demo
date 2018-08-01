@@ -59,6 +59,8 @@ public class ChangeEventProcessor extends ReadSideProcessor<HelloEvent> {
             return repository
                     .updateMessage(evt.name, evt.message)
                     .thenCompose(v -> repository.updateOffset(tag, offset));
+                    //TODO Does Couchbase support atomic batch queries in order to update offset atomically
+                    //TODO with the data projection update
         }
         return CompletableFuture.completedFuture(Done.getInstance());
     }
