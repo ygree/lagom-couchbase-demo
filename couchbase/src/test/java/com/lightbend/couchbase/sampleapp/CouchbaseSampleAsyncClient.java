@@ -43,14 +43,14 @@ public class CouchbaseSampleAsyncClient {
 
         // Perform a N1QL Query
         Observable<AsyncN1qlQueryResult> result = createIndex.concatMap(ignore -> bucket.query(
-            N1qlQuery.parameterized("SELECT name FROM `test` WHERE $1 IN interests",
-                    JsonArray.from("African Swallows"))
+                N1qlQuery.parameterized("SELECT name FROM `test` WHERE $1 IN interests",
+                        JsonArray.from("African Swallows"))
         ));
 
         // Print each found Row
         result.concatMap(rs -> rs.rows())
-        .doOnCompleted(actorSystem::terminate)
-        .subscribe(System.out::println);
+                .doOnCompleted(actorSystem::terminate)
+                .subscribe(System.out::println);
     }
 }
 
