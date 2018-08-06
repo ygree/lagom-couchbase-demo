@@ -1,21 +1,18 @@
 package com.lightbend.couchbase.sampleapp;
 
 import akka.actor.ActorSystem;
-import com.couchbase.client.core.utils.Blocking;
-import com.couchbase.client.java.*;
+import com.couchbase.client.java.AsyncBucket;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.query.AsyncN1qlQueryResult;
+import com.couchbase.client.java.query.N1qlQuery;
 import com.lightbend.couchbase.Couchbase;
 import com.lightbend.couchbase.CouchbaseExtension;
 import rx.Observable;
-import scala.concurrent.Await;
-import scala.concurrent.duration.Duration;
-
-import java.util.concurrent.TimeUnit;
 
 public class CouchbaseSampleAsyncClient {
-    public static void main(String... args) throws Exception {
+    public static void main(String... args) {
 
         ActorSystem actorSystem = ActorSystem.create();
 
@@ -30,36 +27,30 @@ public class CouchbaseSampleAsyncClient {
                 .put("email", "kingarthur@couchbase.com")
                 .put("interests", JsonArray.from("Holy Grail", "African Swallows"));
 
+        // Store the Document
         JsonDocument doc = JsonDocument.create("u:king_arthur", arthur);
-        Observable<JsonDocument> jsonDocumentObservable = bucket.upsert(doc);
-        Blocking.blockForSingle(jsonDocumentObservable, 30, TimeUnit.SECONDS);
+        Observable<JsonDocument> storeDoc = bucket.upsert(doc);
 
+        // Load the Document and print it
+        Observable<JsonDocument> readDoc = storeDoc.concatMap(ignore -> bucket.get("u:king_arthur"));
 
-        Await.ready(actorSystem.terminate(), Duration.Inf());
+        // Prints Content and Metadata of the stored Document
+        readDoc.subscribe(System.out::println);
 
-//TODO: use async interface
+        // Create a N1QL Primary Index (but ignore if it exists)
+        Observable<Boolean> createIndex = readDoc.concatMap(ignore -> bucket.bucketManager()
+                .concatMap(bm -> bm.createN1qlPrimaryIndex(true, false)));
 
-//        // Store the Document
-//        bucket.upsert(JsonDocument.create("u:king_arthur", arthur));
-//
-//        // Load the Document and print it
-//        // Prints Content and Metadata of the stored Document
-//        System.out.println(bucket.get("u:king_arthur"));
-//
-//        // Create a N1QL Primary Index (but ignore if it exists)
-//        bucket.bucketManager().createN1qlPrimaryIndex(true, false);
-//
-//        // Perform a N1QL Query
-//        N1qlQueryResult result = bucket.query(
-//                N1qlQuery.parameterized("SELECT name FROM `test` WHERE $1 IN interests",
-//                        JsonArray.from("African Swallows"))
-//        );
-//
-//        // Print each found Row
-//        for (N1qlQueryRow row : result) {
-//            // Prints {"name":"Arthur"}
-//            System.out.println(row);
-//        }
+        // Perform a N1QL Query
+        Observable<AsyncN1qlQueryResult> result = createIndex.concatMap(ignore -> bucket.query(
+            N1qlQuery.parameterized("SELECT name FROM `test` WHERE $1 IN interests",
+                    JsonArray.from("African Swallows"))
+        ));
+
+        // Print each found Row
+        result.concatMap(rs -> rs.rows())
+        .doOnCompleted(actorSystem::terminate)
+        .subscribe(System.out::println);
     }
 }
 
