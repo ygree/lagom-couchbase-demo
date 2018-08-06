@@ -36,9 +36,20 @@ public class DefaultCouchbase implements Couchbase {
     }
 
     void shutdown() {
-        //TODO handle errors properly and add logging
-        bucket.close(30, TimeUnit.SECONDS);
-        cluster.disconnect(30, TimeUnit.SECONDS);
-        environment.shutdown(30, TimeUnit.SECONDS);
+        try {
+            bucket.close(30, TimeUnit.SECONDS);
+        } catch (Throwable t) {
+            log.error(t, "Error when closing the Couchbase bucket");
+        }
+        try {
+            cluster.disconnect(30, TimeUnit.SECONDS);
+        } catch (Throwable t) {
+            log.error(t, "Error when disconnecting from the Couchbase cluster");
+        }
+        try {
+            environment.shutdown(30, TimeUnit.SECONDS);
+        } catch (Throwable t) {
+            log.error(t, "Error when shutting down the Couchbase environment");
+        }
     }
 }
