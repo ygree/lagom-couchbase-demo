@@ -112,6 +112,16 @@
                 <version>0.85</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.couchbase.client</groupId>
+                <artifactId>java-client</artifactId>
+                <version>${couchbase.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.couchbase.mock</groupId>
+                <artifactId>CouchbaseMock</artifactId>
+                <version>${couchbase.mock.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -121,5 +131,8 @@
         <scala.binary.version>2.12</scala.binary.version>
         
         <lagom.version>1.4.6</lagom.version>
+
+        <couchbase.client.version>2.5.9</couchbase.client.version>
+        <couchbase.mock.version>1.5.19</couchbase.mock.version>
     </properties>
 </project>

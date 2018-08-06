@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.couchbase.client</groupId>
             <artifactId>java-client</artifactId>
-            <version>2.5.9</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
@@ -35,7 +34,6 @@
         <dependency>
             <groupId>com.couchbase.mock</groupId>
             <artifactId>CouchbaseMock</artifactId>
-            <version>1.5.19</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -44,7 +42,6 @@
         <dependency>
             <groupId>com.lightbend.lagom</groupId>
             <artifactId>lagom-javadsl-testkit_${scala.binary.version}</artifactId>
-            <version>1.4.6</version>
         </dependency>
 
     </dependencies>
