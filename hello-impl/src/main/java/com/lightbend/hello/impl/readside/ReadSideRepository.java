@@ -32,7 +32,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Offset> getOffset(AggregateEventTag<HelloEvent> tag) {
 
-        AsyncBucket bucket = couchbase.getAsyncBucket();
+        AsyncBucket bucket = couchbase.asyncBucket();
         String docId = offsetDocId(tag);
 
         Observable<Optional<Offset>> result = bucket
@@ -48,7 +48,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateOffset(AggregateEventTag<HelloEvent> tag, Offset offset) {
 
-        AsyncBucket bucket = couchbase.getAsyncBucket();
+        AsyncBucket bucket = couchbase.asyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("offset", offset.toString());
@@ -68,7 +68,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        AsyncBucket bucket = couchbase.getAsyncBucket();
+        AsyncBucket bucket = couchbase.asyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("messages", JsonArray.from(message))

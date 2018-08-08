@@ -19,7 +19,7 @@ public class CouchbaseSampleAsyncClient {
         // use Couchbase Akka Extension to manage Couchbase resources
         Couchbase couchbase = CouchbaseExtension.CouchbaseExtensionProvider.get(actorSystem);
 
-        AsyncBucket bucket = couchbase.getAsyncBucket();
+        AsyncBucket bucket = couchbase.asyncBucket();
 
         // Create a JSON Document
         JsonObject arthur = JsonObject.create()

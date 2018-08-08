@@ -26,13 +26,13 @@ public class DefaultCouchbase implements Couchbase {
     }
 
     @Override
-    public Bucket getBucket() {
+    public Bucket bucket() {
         return bucket;
     }
 
     @Override
-    public AsyncBucket getAsyncBucket() {
-        return getBucket().async();
+    public AsyncBucket asyncBucket() {
+        return bucket().async();
     }
 
     void shutdown() {

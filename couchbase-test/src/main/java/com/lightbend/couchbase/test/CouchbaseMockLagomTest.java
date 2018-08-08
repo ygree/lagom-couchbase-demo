@@ -7,6 +7,10 @@ import java.util.function.Function;
 
 import static com.lightbend.lagom.javadsl.testkit.ServiceTest.bind;
 
+/**
+ * The base-class for testing Lagom services with Couchbase Mock.
+ * For non-Lagom related data access services see {@link CouchbaseMockTest}.
+ */
 abstract public class CouchbaseMockLagomTest extends CouchbaseMockTest {
 
     /**

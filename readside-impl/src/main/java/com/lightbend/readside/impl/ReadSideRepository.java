@@ -28,7 +28,7 @@ public class ReadSideRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        AsyncBucket bucket = couchbase.getAsyncBucket();
+        AsyncBucket bucket = couchbase.asyncBucket();
 
         JsonObject obj = JsonObject.create()
                 .put("messages", JsonArray.from(message))
@@ -55,7 +55,7 @@ public class ReadSideRepository {
 
         String docId = userMessageDocId(name);
 
-        AsyncBucket bucket = couchbase.getAsyncBucket();
+        AsyncBucket bucket = couchbase.asyncBucket();
 
         Observable<Optional<String>> result = bucket
                 .get(docId)

@@ -12,6 +12,10 @@ import org.junit.Before;
 
 import java.util.ArrayList;
 
+/**
+ * The base-class for testing data access services with Couchbase Mock.
+ * For Lagom services test or Guice injection support see {@link CouchbaseMockLagomTest}.
+ */
 abstract public class CouchbaseMockTest {
     private final BucketConfiguration bucketConfiguration = new BucketConfiguration();
     private CouchbaseMock couchbaseMock;
@@ -61,7 +65,7 @@ abstract public class CouchbaseMockTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         if (cluster != null) {
             cluster.disconnect();
         }

@@ -1,4 +1,4 @@
-package test.java.com.lightbend.couchbase.sampleapp;
+package com.lightbend.couchbase.sampleapp;
 
 import com.couchbase.client.core.utils.Blocking;
 import com.couchbase.client.java.document.JsonDocument;
@@ -23,10 +23,10 @@ public class CouchbaseSampleTest extends CouchbaseMockTest {
 
         String docId = "u:king_arthur";
         JsonDocument doc = JsonDocument.create(docId, arthur);
-        Observable<JsonDocument> jsonDocumentObservable = getCouchbase().getAsyncBucket().upsert(doc);
+        Observable<JsonDocument> jsonDocumentObservable = getCouchbase().asyncBucket().upsert(doc);
         Blocking.blockForSingle(jsonDocumentObservable, 30, TimeUnit.SECONDS);
 
-        JsonObject readDoc = getCouchbase().getAsyncBucket().get(docId).toBlocking().first().content();
+        JsonObject readDoc = getCouchbase().asyncBucket().get(docId).toBlocking().first().content();
 
         assertEquals("Arthur-4444", readDoc.getString("name"));
     }

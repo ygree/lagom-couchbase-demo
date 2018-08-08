@@ -32,7 +32,7 @@ public class CrudBlockingRepository implements CrudRepository {
 
     public CompletionStage<Done> updateMessage(String name, String message) {
 
-        Bucket bucket = couchbase.getBucket();
+        Bucket bucket = couchbase.bucket();
 
         JsonObject obj = JsonObject.create()
                 .put("messages", JsonArray.from(message))
@@ -58,7 +58,7 @@ public class CrudBlockingRepository implements CrudRepository {
 
         String docId = userMessageDocId(name);
 
-        Bucket bucket = couchbase.getBucket();
+        Bucket bucket = couchbase.bucket();
 
 
         JsonDocument jsonDocument = bucket.get(docId);
