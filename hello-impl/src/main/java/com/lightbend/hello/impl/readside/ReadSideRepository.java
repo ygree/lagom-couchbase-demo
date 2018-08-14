@@ -43,7 +43,7 @@ public class ReadSideRepository {
                                 .map(uid -> ((Offset) new Offset.TimeBasedUUID(uid)))
                 );
 
-        return RxJava8Utils.fromSingleOptOptObservable(result).thenApply(v -> v.orElse(Offset.NONE));
+        return RxJava8Utils.fromOptional(result).thenApply(v -> v.orElse(Offset.NONE));
     }
 
     public CompletionStage<Done> updateOffset(AggregateEventTag<HelloEvent> tag, Offset offset) {
@@ -59,7 +59,7 @@ public class ReadSideRepository {
                 .upsert(doc)
                 .map(b -> Done.getInstance());
 
-        return RxJava8Utils.fromSingleObservable(result);
+        return RxJava8Utils.fromSingle(result);
     }
 
     private String offsetDocId(AggregateEventTag<HelloEvent> tag) {
@@ -84,7 +84,7 @@ public class ReadSideRepository {
                 .insert(doc).map(x -> Done.getInstance())
                 .onErrorResumeNext(e -> bucket.query(query).map(x -> Done.getInstance()));
 
-        return RxJava8Utils.fromSingleObservable(result);
+        return RxJava8Utils.fromSingle(result);
     }
 
     private String userMessageDocId(String name) {

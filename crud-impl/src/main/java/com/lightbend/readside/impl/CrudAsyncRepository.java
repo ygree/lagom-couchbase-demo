@@ -45,7 +45,7 @@ public class CrudAsyncRepository implements CrudRepository {
                 .insert(doc).map(x -> Done.getInstance())
                 .onErrorResumeNext(e -> bucket.query(query).map(x -> Done.getInstance()));
 
-        return RxJava8Utils.fromSingleObservable(result);
+        return RxJava8Utils.fromSingle(result);
     }
 
     private String userMessageDocId(String name) {
@@ -63,7 +63,7 @@ public class CrudAsyncRepository implements CrudRepository {
                 .get(docId)
                 .map(v -> Optional.ofNullable(v.content().getString("message")));
 
-        return RxJava8Utils.fromSingleOptOptObservable(result);
+        return RxJava8Utils.fromOptional(result);
     }
 }
 

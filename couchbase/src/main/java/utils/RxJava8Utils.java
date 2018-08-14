@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class RxJava8Utils {
-    public static <T> CompletableFuture<List<T>> fromObservable(Observable<T> observable) {
+    public static <T> CompletableFuture<List<T>> fromMultiple(Observable<T> observable) {
         final CompletableFuture<List<T>> future = new CompletableFuture<>();
         observable
                 .doOnError(future::completeExceptionally)
@@ -16,7 +16,7 @@ public class RxJava8Utils {
         return future;
     }
 
-    public static <T> CompletableFuture<T> fromSingleObservable(Observable<T> observable) {
+    public static <T> CompletableFuture<T> fromSingle(Observable<T> observable) {
         final CompletableFuture<T> future = new CompletableFuture<>();
         observable
                 .doOnError(future::completeExceptionally)
@@ -25,7 +25,7 @@ public class RxJava8Utils {
         return future;
     }
 
-    public static <T> CompletableFuture<Optional<T>> fromSingleOptObservable(Observable<T> observable) {
+    public static <T> CompletableFuture<Optional<T>> fromNullable(Observable<T> observable) {
         final CompletableFuture<Optional<T>> future = new CompletableFuture<>();
         observable
                 .map(Optional::ofNullable)
@@ -35,7 +35,7 @@ public class RxJava8Utils {
         return future;
     }
 
-    public static <T> CompletableFuture<Optional<T>> fromSingleOptOptObservable(Observable<Optional<T>> observable) {
+    public static <T> CompletableFuture<Optional<T>> fromOptional(Observable<Optional<T>> observable) {
         final CompletableFuture<Optional<T>> future = new CompletableFuture<>();
         observable
                 .doOnError(future::completeExceptionally)
